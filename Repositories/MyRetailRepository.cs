@@ -15,9 +15,11 @@ public class MyRetailRepository : IMyRetailRepository
     public async Task<Product> GetProduct(long id)
     {
         string baseUrl = "https://redsky.target.com/v3/pdp/tcin";
-        string queries = "excludes=taxonomy,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics,available_to_promise_network&key=candidate";
+        string exclude = "taxonomy,promotion,bulk_ship,rating_and_review_reviews," +
+                         "rating_and_review_statistics,question_answer_statistics," +
+                         "available_to_promise_network";
 
-        string request = $"{baseUrl}/{id}?{queries}";
+        string request = $"{baseUrl}/{id}?excludes={exclude}&key=candidate";
 
         HttpResponseMessage response = await _httpClient.GetAsync(request);
         response.EnsureSuccessStatusCode();
