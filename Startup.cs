@@ -32,6 +32,9 @@ namespace MyRetail
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyRetail", Version = "v1" });
             });
+
+            services.AddScoped<IMyRetailRepository, MyRetailRepository>();
+            services.AddScoped<IProductManager, ProductManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
