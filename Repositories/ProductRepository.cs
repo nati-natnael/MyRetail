@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 public class ProductRepository : IProductRepository
 {
-    private const string dbConnectionString = "mongodb+srv://MyRetail:myretail@cluster0.88sdm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-    private const string dbName = "MyRetail";
-    private const string collectioName = "Product";
+    private const string dbConnectionString = "mongodb+srv://MyRetail:myretail@cluster0.88sdm.mongodb.net";
+    private const string dbName = "MyRetailDB";
+    private const string collectioName = "Products";
 
     private readonly HttpClient _httpClient;
 
@@ -75,7 +75,7 @@ public class ProductRepository : IProductRepository
     public async Task<bool> UpdateProductPrice(long id, decimal price)
     {
         FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("id", id);
-        UpdateDefinition<BsonDocument> update = Builders<BsonDocument>.Update.Set("current_price.value", price);
+        UpdateDefinition<BsonDocument> update = Builders<BsonDocument>.Update.Set<double>("current_price.value", (double)price);
 
         UpdateResult result = await _collection.UpdateOneAsync(filter, update);
 

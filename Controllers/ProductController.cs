@@ -24,9 +24,9 @@ namespace MyRetail.Controllers
         }
 
         [HttpPut("{id:int}/price/{price:double}")]
-        public async Task<bool> Put(long id, decimal price)
+        public async Task Put(long id, decimal price)
         {
-            return await _productManager.UpdateProductPrice(id, price);
+            await _productManager.UpdateProductPrice(id, price);
         }
     }
 }
