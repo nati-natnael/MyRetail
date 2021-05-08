@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 public class ProductRepository : IProductRepository
 {
-    private const string dbConnectionString = "mongodb+srv://MyRetail:myretail@cluster0.88sdm.mongodb.net";
-    private const string dbName = "MyRetailDB";
-    private const string collectioName = "Products";
+    private const string _dbUsername = "MyRetail";
+    private const string _dbPassword = "myretail";
+    private const string _dbName = "MyRetailDB";
+    private const string _collectioName = "Products";
+
+    private readonly string _dbConnectionString;
 
     private readonly HttpClient _httpClient;
 
@@ -21,9 +24,11 @@ public class ProductRepository : IProductRepository
     {
         _httpClient = new HttpClient();
 
-        _client = new MongoClient(dbConnectionString);
-        _database = _client.GetDatabase(dbName);
-        _collection = _database.GetCollection<BsonDocument>(collectioName);
+        _dbConnectionString = $"mongodb+srv://{_dbUsername}:{_dbPassword}@cluster0.88sdm.mongodb.net";
+
+        _client = new MongoClient(_dbConnectionString);
+        _database = _client.GetDatabase(_dbName);
+        _collection = _database.GetCollection<BsonDocument>(_collectioName);
     }
 
     public async Task<Product> GetProduct(long id)
@@ -58,18 +63,18 @@ public class ProductRepository : IProductRepository
 
         BsonDocument result = _collection.Find(filter).FirstOrDefault();
 
-        BsonValue currentPrice = result["current_price"];
+        BsonValue currentPrice = result?["current_price"];
 
-        Price price = new Price();
-
-        if (currentPrice == null) {
-            return price;
+        if (currentPrice == null)
+        {
+            return null;
         }
 
-        price.Value = (decimal) (currentPrice["value"]?.AsDouble ?? 0);
-        price.Currency = currentPrice["currency_code"]?.AsString ?? string.Empty;
-
-        return price;
+        return new Price
+        {
+            Value = (decimal)(currentPrice["value"]?.AsDouble ?? 0),
+            Currency = currentPrice["currency_code"]?.AsString ?? string.Empty
+        };
     }
 
     public async Task<bool> UpdateProductPrice(long id, decimal price)

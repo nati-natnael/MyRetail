@@ -13,9 +13,7 @@ public class ProductManager : IProductManager
     {
         Product product = await _productRepository.GetProduct(id);
 
-        Price price = _productRepository.GetProductPrice(id);
-
-        product.Price = price;
+        product.Price = _productRepository.GetProductPrice(id);
 
         return product;
     }
