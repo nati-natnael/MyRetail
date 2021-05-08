@@ -1,15 +1,29 @@
+using MongoDB.Bson;
+using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 public class MyRetailRepository : IMyRetailRepository
 {
+    private const string dbConnectionString = "mongodb+srv://MyRetail:myretail@cluster0.88sdm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+    private const string dbName = "MyRetail";
+    private const string collectioName = "Product";
+
     private readonly HttpClient _httpClient;
+
+    private readonly IMongoClient _client;
+    private readonly IMongoDatabase _database;
+    private readonly IMongoCollection<BsonDocument> _collection;
+
 
     public MyRetailRepository()
     {
         _httpClient = new HttpClient();
+
+        _client = new MongoClient(dbConnectionString);
+        _database = _client.GetDatabase(dbName);
+        _collection = _database.GetCollection<BsonDocument>(collectioName);
     }
 
     public async Task<Product> GetProduct(long id)
@@ -40,10 +54,21 @@ public class MyRetailRepository : IMyRetailRepository
 
     public Price GetProductPrice(long id)
     {
-        return new Price
+        FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("id", id);
+
+        BsonDocument result = _collection.Find(filter).FirstOrDefault();
+
+        Price price = new Price
         {
-            Value = 13.80m,
-            Currency = "USD"
+            Value = (decimal)(result["current_price"]["value"]?.AsDouble ?? 0),
+            Currency = result["current_price"]["currency_code"]?.AsString ?? string.Empty
         };
+
+        return price;
+    }
+
+    public Product UpdateProductPrice(long id, decimal price)
+    {
+        return null;
     }
 }
