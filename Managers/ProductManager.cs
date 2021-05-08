@@ -1,23 +1,27 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 public class ProductManager : IProductManager
 {
-    private readonly IMyRetailRepository _myRetailRepository;
+    private readonly IProductRepository _productRepository;
 
-    public ProductManager(IMyRetailRepository myRetailRepository)
+    public ProductManager(IProductRepository productRepository)
     {
-        _myRetailRepository = myRetailRepository;
+        _productRepository = productRepository;
     }
 
     public async Task<Product> GetProduct(long id)
     {
-        Product product = await _myRetailRepository.GetProduct(id);
+        Product product = await _productRepository.GetProduct(id);
 
-        Price price = _myRetailRepository.GetProductPrice(id);
+        Price price = _productRepository.GetProductPrice(id);
 
         product.Price = price;
 
         return product;
+    }
+
+    public async Task<bool> UpdateProductPrice(long id, decimal price)
+    {
+        return await _productRepository.UpdateProductPrice(id, price);
     }
 }

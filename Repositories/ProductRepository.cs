@@ -72,13 +72,13 @@ public class ProductRepository : IProductRepository
         return price;
     }
 
-    public async Task<Price> UpdateProductPrice(long id, decimal price)
+    public async Task<bool> UpdateProductPrice(long id, decimal price)
     {
         FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("id", id);
         UpdateDefinition<BsonDocument> update = Builders<BsonDocument>.Update.Set("current_price.value", price);
 
-        var result = await _collection.UpdateOneAsync(filter, update);
+        UpdateResult result = await _collection.UpdateOneAsync(filter, update);
 
-        return null;
+        return result?.IsAcknowledged ?? false;
     }
 }

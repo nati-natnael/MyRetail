@@ -23,10 +23,10 @@ namespace MyRetail.Controllers
             return await _productManager.GetProduct(id);
         }
 
-        [HttpPut]
-        public void Put()
+        [HttpPut("{id:int}/price/{price:double}")]
+        public async Task<bool> Put(long id, decimal price)
         {
-
+            return await _productManager.UpdateProductPrice(id, price);
         }
     }
 }
