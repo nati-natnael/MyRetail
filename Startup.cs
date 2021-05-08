@@ -33,7 +33,7 @@ namespace MyRetail
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyRetail", Version = "v1" });
             });
 
-            services.AddScoped<IMyRetailRepository, MyRetailRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductManager, ProductManager>();
         }
 

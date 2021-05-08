@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-public class MyRetailRepository : IMyRetailRepository
+public class ProductRepository : IProductRepository
 {
     private const string dbConnectionString = "mongodb+srv://MyRetail:myretail@cluster0.88sdm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
     private const string dbName = "MyRetail";
@@ -17,7 +17,7 @@ public class MyRetailRepository : IMyRetailRepository
     private readonly IMongoCollection<BsonDocument> _collection;
 
 
-    public MyRetailRepository()
+    public ProductRepository()
     {
         _httpClient = new HttpClient();
 
