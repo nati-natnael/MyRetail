@@ -58,17 +58,27 @@ public class MyRetailRepository : IMyRetailRepository
 
         BsonDocument result = _collection.Find(filter).FirstOrDefault();
 
-        Price price = new Price
-        {
-            Value = (decimal)(result["current_price"]["value"]?.AsDouble ?? 0),
-            Currency = result["current_price"]["currency_code"]?.AsString ?? string.Empty
-        };
+        BsonValue currentPrice = result["current_price"];
+
+        Price price = new Price();
+
+        if (currentPrice == null) {
+            return price;
+        }
+
+        price.Value = (decimal) (currentPrice["value"]?.AsDouble ?? 0);
+        price.Currency = currentPrice["currency_code"]?.AsString ?? string.Empty;
 
         return price;
     }
 
-    public Product UpdateProductPrice(long id, decimal price)
+    public async Task<Price> UpdateProductPrice(long id, decimal price)
     {
+        FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("id", id);
+        UpdateDefinition<BsonDocument> update = Builders<BsonDocument>.Update.Set("current_price.value", price);
+
+        var result = await _collection.UpdateOneAsync(filter, update);
+
         return null;
     }
 }
