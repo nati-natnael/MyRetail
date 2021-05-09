@@ -1,6 +1,6 @@
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Text.Json.Serialization;
+using MongoDB.Bson;
 
 public class Product
 {

@@ -1,9 +1,9 @@
-﻿using AutoFixture;
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
+using FluentAssertions;
+using AutoFixture;
+using System;
+using Moq;
 
 namespace MyRetail.UnitTest.Managers
 {

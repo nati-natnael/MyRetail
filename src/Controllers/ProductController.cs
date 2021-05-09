@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace MyRetail.Controllers

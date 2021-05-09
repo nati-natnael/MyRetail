@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using System.Threading;
@@ -10,7 +11,6 @@ using AutoFixture;
 using System.Net;
 using System;
 using Moq;
-using System.Collections.Generic;
 
 namespace MyRetail.UnitTest.Repositories
 {
@@ -138,7 +138,7 @@ namespace MyRetail.UnitTest.Repositories
         }
 
         [TestMethod]
-        public async Task GetProductPrice_ExistingProductId()
+        public async Task GetProductPriceAsync_ExistingProductId()
         {
             // Arrange
             var productId = _fixture.Create<long>();
@@ -181,7 +181,7 @@ namespace MyRetail.UnitTest.Repositories
         }
 
         [TestMethod]
-        public async Task GetProductPrice_NoPriceValue()
+        public async Task GetProductPriceAsync_NoPriceValue()
         {
             // Arrange
             var productId = _fixture.Create<long>();
@@ -220,7 +220,7 @@ namespace MyRetail.UnitTest.Repositories
         }
 
         [TestMethod]
-        public async Task GetProductPrice_NonExistentProductId()
+        public async Task GetProductPriceAsync_NonExistentProductId()
         {
             // Arrange
             var productId = _fixture.Create<long>();
@@ -242,6 +242,60 @@ namespace MyRetail.UnitTest.Repositories
 
             // Assert
             result.Should().BeNull();
+        }
+
+        [TestMethod]
+        public async Task UpdateProductPriceAsync_ExistingProductId()
+        {
+            // Arrange
+            var productId = _fixture.Create<long>();
+            var priceValue = _fixture.Create<decimal>();
+
+            Mock<UpdateResult> updateResultMock = new Mock<UpdateResult>();
+
+            updateResultMock.Setup(p => p.IsAcknowledged).Returns(true);
+
+            _collectionMock.Setup(p => p.UpdateOneAsync(
+                It.IsAny<FilterDefinition<BsonDocument>>(),
+                It.IsAny<UpdateDefinition<BsonDocument>>(),
+                It.IsAny<UpdateOptions>(),
+                It.IsAny<CancellationToken>()
+            )).ReturnsAsync(updateResultMock.Object);
+
+            _productRepository = new ProductRepository(null, _collectionMock.Object);
+
+            // Act
+            bool result = await _productRepository.UpdateProductPriceAsync(productId, priceValue);
+
+            // Assert
+            result.Should().Be(true);
+        }
+
+        [TestMethod]
+        public async Task UpdateProductPriceAsync_NonExistentProductId()
+        {
+            // Arrange
+            var productId = _fixture.Create<long>();
+            var priceValue = _fixture.Create<decimal>();
+
+            Mock<UpdateResult> updateResultMock = new Mock<UpdateResult>();
+
+            updateResultMock.Setup(p => p.IsAcknowledged).Returns(false);
+
+            _collectionMock.Setup(p => p.UpdateOneAsync(
+                It.IsAny<FilterDefinition<BsonDocument>>(),
+                It.IsAny<UpdateDefinition<BsonDocument>>(),
+                It.IsAny<UpdateOptions>(),
+                It.IsAny<CancellationToken>()
+            )).ReturnsAsync(updateResultMock.Object);
+
+            _productRepository = new ProductRepository(null, _collectionMock.Object);
+
+            // Act
+            bool result = await _productRepository.UpdateProductPriceAsync(productId, priceValue);
+
+            // Assert
+            result.Should().Be(false);
         }
     }
 }
