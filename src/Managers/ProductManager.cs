@@ -15,7 +15,7 @@ public class ProductManager : IProductManager
 
         if (product != null)
         {
-            product.Price = _productRepository.GetProductPrice(id);
+            product.Price = await _productRepository.GetProductPriceAsync(id);
         }
 
         return product;

@@ -35,8 +35,8 @@ namespace MyRetail.UnitTest.Managers
 
             _productRepositoryMock.Setup(p => p.GetProductAsync(It.IsAny<long>()))
                 .ReturnsAsync(product);
-            _productRepositoryMock.Setup(p => p.GetProductPrice(It.IsAny<long>()))
-                .Returns(price);
+            _productRepositoryMock.Setup(p => p.GetProductPriceAsync(It.IsAny<long>()))
+                .ReturnsAsync(price);
 
             // Act
             Product result = await _productManager.GetProductAsync(productId);
@@ -44,7 +44,7 @@ namespace MyRetail.UnitTest.Managers
             // Assert
             result.Should().BeNull();
 
-            _productRepositoryMock.Verify(p => p.GetProductPrice(It.IsAny<long>()), Times.Never);
+            _productRepositoryMock.Verify(p => p.GetProductPriceAsync(It.IsAny<long>()), Times.Never);
         }
 
         [TestMethod]
@@ -58,8 +58,8 @@ namespace MyRetail.UnitTest.Managers
 
             _productRepositoryMock.Setup(p => p.GetProductAsync(It.IsAny<long>()))
                 .ReturnsAsync(product);
-            _productRepositoryMock.Setup(p => p.GetProductPrice(It.IsAny<long>()))
-                .Returns(price);
+            _productRepositoryMock.Setup(p => p.GetProductPriceAsync(It.IsAny<long>()))
+                .ReturnsAsync(price);
 
             // Act
             Product result = await _productManager.GetProductAsync(productId);
@@ -68,7 +68,7 @@ namespace MyRetail.UnitTest.Managers
             result.Should().NotBeNull();
             result.Price.Should().NotBeNull();
 
-            _productRepositoryMock.Verify(p => p.GetProductPrice(
+            _productRepositoryMock.Verify(p => p.GetProductPriceAsync(
                 It.Is<long>(id => id == productId)
             ), Times.Once);
         }

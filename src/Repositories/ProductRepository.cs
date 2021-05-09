@@ -6,29 +6,13 @@ using System.Threading.Tasks;
 
 public class ProductRepository : IProductRepository
 {
-    private const string _dbUsername = "MyRetail";
-    private const string _dbPassword = "myretail";
-    private const string _dbName = "MyRetailDB";
-    private const string _collectioName = "Products";
-
-    private readonly string _dbConnectionString;
-
     private readonly HttpClient _httpClient;
-
-    private readonly IMongoClient _client;
-    private readonly IMongoDatabase _database;
     private readonly IMongoCollection<BsonDocument> _collection;
 
-
-    public ProductRepository()
+    public ProductRepository(HttpClient httpClient, IMongoCollection<BsonDocument> collection)
     {
-        _httpClient = new HttpClient();
-
-        _dbConnectionString = $"mongodb+srv://{_dbUsername}:{_dbPassword}@cluster0.88sdm.mongodb.net";
-
-        _client = new MongoClient(_dbConnectionString);
-        _database = _client.GetDatabase(_dbName);
-        _collection = _database.GetCollection<BsonDocument>(_collectioName);
+        _httpClient = httpClient;
+        _collection = collection;
     }
 
     public async Task<Product> GetProductAsync(long id)
@@ -57,23 +41,35 @@ public class ProductRepository : IProductRepository
         return product;
     }
 
-    public Price GetProductPrice(long id)
+    public async Task<Price> GetProductPriceAsync(long id)
     {
         FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("id", id);
 
-        BsonDocument result = _collection.Find(filter).FirstOrDefault();
+        IAsyncCursor<BsonDocument> cursor = await _collection.FindAsync(filter);
 
-        BsonValue currentPrice = result?["current_price"];
+        BsonDocument result = cursor.FirstOrDefault();
+
+        if (result == null)
+        {
+            return null;
+        }
+
+        result.TryGetValue("current_price", out BsonValue currentPrice);
 
         if (currentPrice == null)
         {
             return null;
         }
 
+        BsonDocument currentPriceDoc = currentPrice.AsBsonDocument;
+
+        currentPriceDoc.TryGetValue("value", out BsonValue priceValue);
+        currentPriceDoc.TryGetValue("currency_code", out BsonValue currency);
+
         return new Price
         {
-            Value = (decimal)(currentPrice["value"]?.AsDouble ?? 0),
-            Currency = currentPrice["currency_code"]?.AsString ?? string.Empty
+            Value = (decimal) (priceValue?.AsDouble ?? 0),
+            Currency = currency?.AsString
         };
     }
 
