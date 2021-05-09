@@ -29,7 +29,7 @@ jobs:
         dotnet build tests/MyRetail.UnitTest/MyRetail.UnitTest.csproj --configuration Release
 
     - name: Run unit tests
-      run: dotnet run tests/MyRetail.UnitTest/MyRetail.UnitTest.csproj -c Release -o ${{env.DOTNET_ROOT}}/tests
+      run: dotnet tests/MyRetail.UnitTest/MyRetail.UnitTest.dll --configuration Release
 
     - name: dotnet publish
       run: dotnet publish src/MyRetail.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
