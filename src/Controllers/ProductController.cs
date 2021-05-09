@@ -20,13 +20,13 @@ namespace MyRetail.Controllers
         [HttpGet("{id:int}")]
         public async Task<Product> Get(long id)
         {
-            return await _productManager.GetProduct(id);
+            return await _productManager.GetProductAsync(id);
         }
 
         [HttpPut("{id:int}/price/{price:double}")]
         public async Task Put(long id, decimal price)
         {
-            await _productManager.UpdateProductPrice(id, price);
+            await _productManager.UpdateProductPriceAsync(id, price);
         }
     }
 }

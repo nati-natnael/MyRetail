@@ -31,7 +31,7 @@ public class ProductRepository : IProductRepository
         _collection = _database.GetCollection<BsonDocument>(_collectioName);
     }
 
-    public async Task<Product> GetProduct(long id)
+    public async Task<Product> GetProductAsync(long id)
     {
         string baseUrl = "https://redsky.target.com/v3/pdp/tcin";
         string exclude = "taxonomy,promotion,bulk_ship,rating_and_review_reviews," +
@@ -77,7 +77,7 @@ public class ProductRepository : IProductRepository
         };
     }
 
-    public async Task<bool> UpdateProductPrice(long id, decimal price)
+    public async Task<bool> UpdateProductPriceAsync(long id, decimal price)
     {
         FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("id", id);
         UpdateDefinition<BsonDocument> update = Builders<BsonDocument>.Update.Set<double>("current_price.value", (double)price);
