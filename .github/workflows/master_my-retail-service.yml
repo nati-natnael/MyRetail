@@ -24,7 +24,8 @@ jobs:
         dotnet-version: '5.0.x'
 
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: dotnet build src/MyRetail.csproj --configuration Release
+      run: dotnet build tests/MyRetail.UnitTest/MyRetail.UnitTest.csproj --configuration Release
 
     - name: dotnet publish
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
@@ -35,5 +36,5 @@ jobs:
         app-name: my-retail-service
         slot-name: Production
         publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A6EA2F63F8EE43FE857BC0153E4AF2F1 }}
-        package: ${{env.DOTNET_ROOT}}/src/myapp
+        package: ${{env.DOTNET_ROOT}}/myapp
 
