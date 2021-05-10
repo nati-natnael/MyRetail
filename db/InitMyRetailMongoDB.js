@@ -7,9 +7,9 @@ print("Connecting to db ... ", dbName);
 const db = connect(`mongodb+srv://${dbUsername}:${dbPassword}@${dbAddress}/${dbName}`);
 print("Successfully connected to ", db);
 
-print("Dropping collection 'Products' ...");
+print(`Dropping DB ${dbName} ...`);
 db.Products.drop();
-print("Successfully dropped collection 'Products'");
+print(`Successfully dropped DB ${dbName}`);
 
 print("Inserting to collection 'Products' ...");
 const docArray = [
