@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.OpenApi.Models;
 using System.Net.Http;
@@ -12,11 +11,6 @@ namespace MyRetail
 {
     public class Startup
     {
-        private const string _dbUsername = "MyRetail";
-        private const string _dbPassword = "myretail";
-        private const string _dbName = "MyRetailDB";
-        private const string _collectioName = "Products";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -37,11 +31,17 @@ namespace MyRetail
 
             services.AddScoped<IProductRepository>(c =>
             {
-                string dbConnectionString = $"mongodb+srv://{_dbUsername}:{_dbPassword}@cluster0.88sdm.mongodb.net";
+                string dbAddress = Configuration.GetValue<string>("DBConnectionStrings:DBAddress");
+                string dbUsername = Configuration.GetValue<string>("DBConnectionStrings:Username");
+                string dbPassword = Configuration.GetValue<string>("DBConnectionStrings:Password");
+                string dbName = Configuration.GetValue<string>("DBConnectionStrings:DBName");
+                string collectioName = Configuration.GetValue<string>("DBConnectionStrings:CollectionName");
+
+                string dbConnectionString = $"mongodb+srv://{dbUsername}:{dbPassword}@{dbAddress}";
 
                 IMongoClient client = new MongoClient(dbConnectionString);
-                IMongoDatabase database = client.GetDatabase(_dbName);
-                IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>(_collectioName);
+                IMongoDatabase database = client.GetDatabase(dbName);
+                IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>(collectioName);
 
                 return new ProductRepository(new HttpClient(), collection);
             });

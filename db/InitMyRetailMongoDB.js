@@ -1,17 +1,19 @@
-const dbName = "MyRetailDB";
 const dbAddress = "cluster0.88sdm.mongodb.net";
 const dbUsername = "MyRetail";
 const dbPassword = "myretail";
+const dbName = "MyRetailDB";
+const collectionName = "Products";
 
-print("Connecting to db ... ", dbName);
+print(`Connecting to db '${dbName}' ... `);
 const db = connect(`mongodb+srv://${dbUsername}:${dbPassword}@${dbAddress}/${dbName}`);
-print("Successfully connected to ", db);
+const collection = db.getCollection(collectionName);
+print(`Successfully connected to '${dbName}'`);
 
-print(`Dropping DB ${dbName} ...`);
-db.Products.drop();
-print(`Successfully dropped DB ${dbName}`);
+print(`Dropping collection '${collectionName}' ...`);
+collection.drop();
+print(`Successfully dropped collection '${collectionName}'`);
 
-print("Inserting to collection 'Products' ...");
+print(`Inserting to collection '${collectionName}' ...`);
 const docArray = [
     {
         "id": 13860428,
@@ -48,12 +50,12 @@ const docArray = [
     // *** Add another Document here ***
 ];
 
-db.Products.insertMany(docArray);
-print("Successfully inserted to collection 'Products'");
+collection.insertMany(docArray);
+print(`Successfully inserted to collection '${collectionName}'`);
 
 print("Verify document insertion to collection 'Products' ...");
 for (const doc of docArray) {
-    const dbDoc = db.Products.find({ "id": doc["id"] });
+    const dbDoc = collection.find({ "id": doc["id"] });
     if (dbDoc){
         print("\tDocument ID - ", doc["id"], " found");
     } else {
@@ -63,3 +65,4 @@ for (const doc of docArray) {
     }
 }
 print("Verification successfully completed");
+quit();
