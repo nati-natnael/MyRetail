@@ -58,7 +58,7 @@ namespace MyRetail.UnitTest.Controllers
             }
             catch (Exception ex)
             {
-                ex.Message.Should().Be(exceptionMsg);
+                ex.Message.Should().Be($"Product not found: {productId}");
             }
         }
 
@@ -105,7 +105,7 @@ namespace MyRetail.UnitTest.Controllers
             }
             catch (Exception ex)
             {
-                ex.Message.Should().Be(exceptionMsg);
+                ex.Message.Should().Be($"Price update failed on product: {productId}");
             }
         }
     }
