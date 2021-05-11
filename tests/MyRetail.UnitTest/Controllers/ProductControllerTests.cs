@@ -5,6 +5,7 @@ using FluentAssertions;
 using AutoFixture;
 using System;
 using Moq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MyRetail.UnitTest.Controllers
 {
@@ -34,10 +35,10 @@ namespace MyRetail.UnitTest.Controllers
             _productManagerMock.Setup(p => p.GetProductAsync(It.IsAny<long>())).ReturnsAsync(product);
 
             // Act
-            Product result = await _productController.Get(productId);
+            ObjectResult result = (ObjectResult) await _productController.Get(productId);
 
             // Assert
-            result.Should().Equals(product);
+            result.Value.Should().Equals(product);
         }
 
         [TestMethod]
@@ -51,15 +52,12 @@ namespace MyRetail.UnitTest.Controllers
                 .ThrowsAsync(new Exception(exceptionMsg));
 
             // Act
-            try
-            {
-                await _productController.Get(productId);
-                Assert.Fail();
-            }
-            catch (Exception ex)
-            {
-                ex.Message.Should().Be($"Product not found: {productId}");
-            }
+            // Act
+            ObjectResult result = (ObjectResult)await _productController.Get(productId);
+
+            // Assert
+            result.StatusCode.Should().Be(404);
+            result.Value.Should().Be($"Product not found: {productId}");
         }
 
         [TestMethod]
@@ -75,9 +73,11 @@ namespace MyRetail.UnitTest.Controllers
             )).ReturnsAsync(true);
 
             // Act
-            await _productController.Put(productId, priceValue);
+            ObjectResult result = (ObjectResult) await _productController.Put(productId, priceValue);
 
             // Assert
+            result.StatusCode.Should().Be(200);
+
             _productManagerMock.Verify(p => p.UpdateProductPriceAsync(
                 It.Is<long>(id => id == productId),
                 It.Is<decimal>(price => price == priceValue)
@@ -98,15 +98,10 @@ namespace MyRetail.UnitTest.Controllers
             )).ThrowsAsync(new Exception(exceptionMsg));
 
             // Act
-            try
-            {
-                await _productController.Put(productId, priceValue);
-                Assert.Fail();
-            }
-            catch (Exception ex)
-            {
-                ex.Message.Should().Be($"Price update failed on product: {productId}");
-            }
+            ObjectResult result = (ObjectResult)await _productController.Put(productId, priceValue);
+
+            result.StatusCode.Should().Be(404);
+            result.Value.Should().Be($"Price update failed on product: {productId}");
         }
     }
 }

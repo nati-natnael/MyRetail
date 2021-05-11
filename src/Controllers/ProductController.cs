@@ -19,28 +19,28 @@ namespace MyRetail.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<Product> Get(long id)
+        public async Task<IActionResult> Get(long id)
         {
             try
             {
-                return await _productManager.GetProductAsync(id);
+                return Ok(await _productManager.GetProductAsync(id));
             }
             catch (Exception)
             {
-                throw new Exception($"Product not found: {id}");
+                return NotFound($"Product not found: {id}");
             }
         }
 
         [HttpPut("{id:int}/price/{price:double}")]
-        public async Task Put(long id, decimal price)
+        public async Task<IActionResult> Put(long id, decimal price)
         {
             try
             {
-                await _productManager.UpdateProductPriceAsync(id, price);
+                return Ok(await _productManager.UpdateProductPriceAsync(id, price));
             }
             catch (Exception)
             {
-                throw new Exception($"Price update failed on product: {id}");
+                return NotFound($"Price update failed on product: {id}");
             }
         }
     }
