@@ -21,7 +21,7 @@ public class ProductManager : IProductManager
         return product;
     }
 
-    public async Task<bool> UpdateProductPriceAsync(long id, decimal price)
+    public async Task<bool> UpdateProductPriceAsync(long id, double price)
     {
         return await _productRepository.UpdateProductPriceAsync(id, price);
     }

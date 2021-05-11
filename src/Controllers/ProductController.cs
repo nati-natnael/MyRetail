@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System;
+using System.Net;
 
 namespace MyRetail.Controllers
 {
@@ -19,6 +20,7 @@ namespace MyRetail.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(Product), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> Get(long id)
         {
             try
@@ -32,7 +34,7 @@ namespace MyRetail.Controllers
         }
 
         [HttpPut("{id:int}/price/{price:double}")]
-        public async Task<IActionResult> Put(long id, decimal price)
+        public async Task<IActionResult> Put(long id, double price)
         {
             try
             {
@@ -40,7 +42,7 @@ namespace MyRetail.Controllers
             }
             catch (Exception)
             {
-                return NotFound($"Price update failed on product: {id}");
+                return NotFound($"Product not found: {id}");
             }
         }
     }

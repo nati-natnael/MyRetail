@@ -73,10 +73,16 @@ public class ProductRepository : IProductRepository
         };
     }
 
-    public async Task<bool> UpdateProductPriceAsync(long id, decimal price)
+    public async Task<bool> UpdateProductPriceAsync(long id, double price)
     {
+        // Check if product price exists
+        if (await GetProductPriceAsync(id) == null)
+        {
+            throw new System.ArgumentException($"Product not found {id}");
+        }
+
         FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Eq("id", id);
-        UpdateDefinition<BsonDocument> update = Builders<BsonDocument>.Update.Set<double>("current_price.value", (double)price);
+        UpdateDefinition<BsonDocument> update = Builders<BsonDocument>.Update.Set<double>("current_price.value", price);
 
         UpdateResult result = await _collection.UpdateOneAsync(filter, update);
 

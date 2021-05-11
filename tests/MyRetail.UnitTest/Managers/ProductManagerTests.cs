@@ -85,27 +85,22 @@ namespace MyRetail.UnitTest.Managers
                 .ThrowsAsync(new Exception(exceptionMsg));
 
             // Act
-            try
-            {
-                await _productManager.GetProductAsync(productId);
-                Assert.IsTrue(false);
-            }
-            catch (Exception ex)
-            {
-                ex.Message.Should().Be(exceptionMsg);
-            }
+            Func<Task> act = async () => await _productManager.GetProductAsync(productId);
+
+            // Assert
+            await act.Should().ThrowAsync<Exception>().WithMessage(exceptionMsg);
         }
 
         [TestMethod]
         public async Task UpdateProductPrice__NonExistentProduct()
         {
             // Arrange
-            long productId = _fixture.Create<long>();
-            decimal priceValue = _fixture.Create<decimal>();
+            var productId = _fixture.Create<long>();
+            var priceValue = _fixture.Create<double>();
 
             _productRepositoryMock.Setup(p => p.UpdateProductPriceAsync(
                 It.IsAny<long>(),
-                It.IsAny<decimal>()
+                It.IsAny<double>()
             )).ReturnsAsync(false);
 
             // Act
@@ -119,12 +114,12 @@ namespace MyRetail.UnitTest.Managers
         public async Task UpdateProductPrice__ExistentProduct()
         {
             // Arrange
-            long productId = _fixture.Create<long>();
-            decimal priceValue = _fixture.Create<decimal>();
+            var productId = _fixture.Create<long>();
+            var priceValue = _fixture.Create<double>();
 
             _productRepositoryMock.Setup(p => p.UpdateProductPriceAsync(
                 It.IsAny<long>(),
-                It.IsAny<decimal>()
+                It.IsAny<double>()
             )).ReturnsAsync(true);
 
             // Act
@@ -138,26 +133,21 @@ namespace MyRetail.UnitTest.Managers
         public async Task UpdateProductPrice__HandleException()
         {
             // Arrange
-            long productId = _fixture.Create<long>();
-            decimal priceValue = _fixture.Create<decimal>();
+            var productId = _fixture.Create<long>();
+            var priceValue = _fixture.Create<double>();
 
             string exceptionMsg = "This is test exception";
 
             _productRepositoryMock.Setup(p => p.UpdateProductPriceAsync(
                 It.IsAny<long>(),
-                It.IsAny<decimal>()
+                It.IsAny<double>()
             )).ThrowsAsync(new Exception(exceptionMsg));
 
             // Act
-            try
-            {
-                await _productManager.UpdateProductPriceAsync(productId, priceValue);
-                Assert.IsTrue(false);
-            }
-            catch (Exception ex)
-            {
-                ex.Message.Should().Be(exceptionMsg);
-            }
+            Func<Task> act = async () => await _productManager.UpdateProductPriceAsync(productId, priceValue);
+
+            // Assert
+            await act.Should().ThrowAsync<Exception>().WithMessage(exceptionMsg);
         }
     }
 }

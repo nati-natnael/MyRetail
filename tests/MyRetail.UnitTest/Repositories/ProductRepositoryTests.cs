@@ -39,17 +39,18 @@ namespace MyRetail.UnitTest.Repositories
         {
             // Arrange
             var productId = _fixture.Create<long>();
+            var productName = _fixture.Create<string>();
 
             var response = new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent("{ \"product\": { \"item\": { \"product_description\": { \"title\": \"test title\" } } } }")
+                Content = new StringContent("{ \"product\": { \"item\": { \"product_description\": { \"title\": \"" + productName + "\" } } } }")
             };
 
             var httpHandlerMock = new Mock<HttpMessageHandler>();
             httpHandlerMock.Protected().Setup<Task<HttpResponseMessage>>(
                 "SendAsync",
-                ItExpr.IsAny<HttpRequestMessage>(),
+                It.IsAny<HttpRequestMessage>(),
                 ItExpr.IsAny<CancellationToken>()
             ).ReturnsAsync(response)
             .Verifiable();
@@ -65,7 +66,7 @@ namespace MyRetail.UnitTest.Repositories
             result.Should().NotBeNull();
             result.Price.Should().BeNull();
             result.Id.Should().Be(productId);
-            result.Name.Should().Be("test title");
+            result.Name.Should().Be(productName);
         }
 
         [TestMethod]
@@ -91,16 +92,11 @@ namespace MyRetail.UnitTest.Repositories
 
             _productRepository = new ProductRepository(httpClient, _collectionMock.Object);
 
-            try
-            {
-                // Act
-                Product result = await _productRepository.GetProductAsync(productId);
-                Assert.Fail();
-            }
-            catch (Exception)
-            {
-                // Test passed
-            }
+            // Act
+            Func<Task> act = async () => await _productRepository.GetProductAsync(productId);
+
+            // Assert
+            await act.Should().ThrowAsync<Exception>();
         }
 
         [TestMethod]
@@ -149,7 +145,7 @@ namespace MyRetail.UnitTest.Repositories
 
             BsonDocument doc = new BsonDocument
             {
-                { "id", 1 },
+                { "id", productId },
                 { "name", "test name" },
                 {
                     "current_price",
@@ -192,7 +188,7 @@ namespace MyRetail.UnitTest.Repositories
 
             BsonDocument doc = new BsonDocument
             {
-                { "id", 1 },
+                { "id", productId },
                 { "name", "test name" },
                 {
                     "current_price",
@@ -249,9 +245,34 @@ namespace MyRetail.UnitTest.Repositories
         {
             // Arrange
             var productId = _fixture.Create<long>();
-            var priceValue = _fixture.Create<decimal>();
+            var priceValue = _fixture.Create<double>();
+            var currency = _fixture.Create<string>();
 
-            Mock<UpdateResult> updateResultMock = new Mock<UpdateResult>();
+            var doc = new BsonDocument
+            {
+                { "id", productId },
+                { "name", "test name" },
+                {
+                    "current_price",
+                    new BsonDocument
+                    {
+                        { "value", priceValue },
+                        { "currency_code", currency }
+                    }
+                }
+            };
+
+            _docCursor.Setup(p => p.Current).Returns(new List<BsonDocument>() { doc });
+            _docCursor.SetupSequence(p => p.MoveNext(It.IsAny<CancellationToken>())).Returns(true).Returns(false);
+            _docCursor.SetupSequence(p => p.MoveNextAsync(It.IsAny<CancellationToken>())).ReturnsAsync(true).ReturnsAsync(false);
+
+            _collectionMock.Setup(p => p.FindAsync(
+                It.IsAny<FilterDefinition<BsonDocument>>(),
+                It.IsAny<FindOptions<BsonDocument, BsonDocument>>(),
+                It.IsAny<CancellationToken>()
+            )).ReturnsAsync(_docCursor.Object);
+
+            var updateResultMock = new Mock<UpdateResult>();
 
             updateResultMock.Setup(p => p.IsAcknowledged).Returns(true);
 
@@ -276,9 +297,15 @@ namespace MyRetail.UnitTest.Repositories
         {
             // Arrange
             var productId = _fixture.Create<long>();
-            var priceValue = _fixture.Create<decimal>();
+            var priceValue = _fixture.Create<double>();
 
-            Mock<UpdateResult> updateResultMock = new Mock<UpdateResult>();
+            _collectionMock.Setup(p => p.FindAsync(
+                It.IsAny<FilterDefinition<BsonDocument>>(),
+                It.IsAny<FindOptions<BsonDocument, BsonDocument>>(),
+                It.IsAny<CancellationToken>()
+            )).ReturnsAsync(_docCursor.Object);
+
+            var updateResultMock = new Mock<UpdateResult>();
 
             updateResultMock.Setup(p => p.IsAcknowledged).Returns(false);
 
@@ -292,10 +319,10 @@ namespace MyRetail.UnitTest.Repositories
             _productRepository = new ProductRepository(null, _collectionMock.Object);
 
             // Act
-            bool result = await _productRepository.UpdateProductPriceAsync(productId, priceValue);
+            Func<Task> act = async () => await _productRepository.UpdateProductPriceAsync(productId, priceValue);
 
             // Assert
-            result.Should().Be(false);
+            await act.Should().ThrowAsync<ArgumentException>().WithMessage($"Product not found {productId}");
         }
     }
 }

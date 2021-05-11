@@ -1,11 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using MyRetail.Controllers;
 using FluentAssertions;
 using AutoFixture;
 using System;
 using Moq;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MyRetail.UnitTest.Controllers
 {
@@ -46,12 +46,10 @@ namespace MyRetail.UnitTest.Controllers
         {
             // Arrange
             long productId = _fixture.Create<long>();
-            string exceptionMsg = "Test exception message";
 
             _productManagerMock.Setup(p => p.GetProductAsync(It.IsAny<long>()))
-                .ThrowsAsync(new Exception(exceptionMsg));
+                .ThrowsAsync(new Exception("Test exception message"));
 
-            // Act
             // Act
             ObjectResult result = (ObjectResult)await _productController.Get(productId);
 
@@ -64,12 +62,12 @@ namespace MyRetail.UnitTest.Controllers
         public async Task Put()
         {
             // Arrange
-            long productId = _fixture.Create<long>();
-            decimal priceValue = _fixture.Create<decimal>();
+            var productId = _fixture.Create<long>();
+            var priceValue = _fixture.Create<double>();
 
             _productManagerMock.Setup(p => p.UpdateProductPriceAsync(
                 It.IsAny<long>(),
-                It.IsAny<decimal>()
+                It.IsAny<double>()
             )).ReturnsAsync(true);
 
             // Act
@@ -80,7 +78,7 @@ namespace MyRetail.UnitTest.Controllers
 
             _productManagerMock.Verify(p => p.UpdateProductPriceAsync(
                 It.Is<long>(id => id == productId),
-                It.Is<decimal>(price => price == priceValue)
+                It.Is<double>(price => price == priceValue)
             ), Times.Once);
         }
 
@@ -88,20 +86,20 @@ namespace MyRetail.UnitTest.Controllers
         public async Task Put_Exception()
         {
             // Arrange
-            long productId = _fixture.Create<long>();
-            decimal priceValue = _fixture.Create<decimal>();
-            string exceptionMsg = "Test exception message";
+            var productId = _fixture.Create<long>();
+            var priceValue = _fixture.Create<double>();
 
             _productManagerMock.Setup(p => p.UpdateProductPriceAsync(
                 It.IsAny<long>(),
-                It.IsAny<decimal>()
-            )).ThrowsAsync(new Exception(exceptionMsg));
+                It.IsAny<double>()
+            )).ThrowsAsync(new Exception("Test exception message"));
 
             // Act
             ObjectResult result = (ObjectResult)await _productController.Put(productId, priceValue);
 
+            // Assert
             result.StatusCode.Should().Be(404);
-            result.Value.Should().Be($"Price update failed on product: {productId}");
+            result.Value.Should().Be($"Product not found: {productId}");
         }
     }
 }
