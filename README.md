@@ -82,7 +82,7 @@ Pre-requisites:
     > dotnet run tests/MyRetail.UnitTest/MyRetail.UnitTest.csproj
     ```
 
-## MyRetail API Examples (From Hosted APP)
+## MyRetail API Examples (From Hosted App)
 The following are examples of MyRetail app retrieving product information and updating pricing.
 
 ### Get Product Info by ID
@@ -112,6 +112,9 @@ PUT /product/13860428/price/10.00 HTTP/1.1
 ```
 ## Run Tests Locally
 MyRetail is cover by unit and acceptance tests. 
+
+Pre-requisites:
+* MyRetail App and all its dependencies must be installed locally. Assuming MyRetail app settings contain default db connection strings, MongoDB server is not required locally to run tests.
 
 ---
 **NOTE** - MyRetail acceptance tests use hosted version of the app.
