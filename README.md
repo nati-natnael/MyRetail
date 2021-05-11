@@ -40,12 +40,13 @@ There is a JS script in the `~/MyRetail/db` directory called `InitMyRetailMongoD
 
 ---
 
-The script contains connection names and credentials. These lines need to be updated to reflect the local database values. 
+The script contains connection names and credentials. These lines need to be updated to reflect the local database values. These values must match `DBConnectionStrings` in appsettings.json file used by MyRetail app to connect to MongoDB.
 ```
 const dbName = "MyRetailDB"; 
 const dbAddress = "cluster0.88sdm.mongodb.net";
 const dbUsername = "MyRetail";
 const dbPassword = "myretail";
+const collectionName = "Products";
 ```
 
 Run code below to execute the script:
