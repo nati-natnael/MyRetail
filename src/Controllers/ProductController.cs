@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System;
 
 namespace MyRetail.Controllers
 {
@@ -20,13 +21,27 @@ namespace MyRetail.Controllers
         [HttpGet("{id:int}")]
         public async Task<Product> Get(long id)
         {
-            return await _productManager.GetProductAsync(id);
+            try
+            {
+                return await _productManager.GetProductAsync(id);
+            }
+            catch (Exception)
+            {
+                throw new Exception($"Product not found: {id}");
+            }
         }
 
         [HttpPut("{id:int}/price/{price:double}")]
         public async Task Put(long id, decimal price)
         {
-            await _productManager.UpdateProductPriceAsync(id, price);
+            try
+            {
+                await _productManager.UpdateProductPriceAsync(id, price);
+            }
+            catch (Exception)
+            {
+                throw new Exception($"Price update failed on product: {id}");
+            }
         }
     }
 }
