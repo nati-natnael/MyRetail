@@ -50,7 +50,7 @@ namespace MyRetail.UnitTest.Repositories
             var httpHandlerMock = new Mock<HttpMessageHandler>();
             httpHandlerMock.Protected().Setup<Task<HttpResponseMessage>>(
                 "SendAsync",
-                It.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<HttpRequestMessage>(),
                 ItExpr.IsAny<CancellationToken>()
             ).ReturnsAsync(response)
             .Verifiable();

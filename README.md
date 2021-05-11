@@ -110,3 +110,23 @@ The above steps will send a `PUT` request to MyRetail API in the following form:
 PUT /product/13860428/price/10.00 HTTP/1.1
 ...
 ```
+## Run Tests Locally
+MyRetail is cover by unit and acceptance tests. 
+
+---
+**NOTE** - MyRetail acceptance tests use hosted version of the app.
+
+---
+
+Follow these steps to run all unit tests:
+
+1. Navigate to `~/MyRetail/src/`.
+
+    ```
+    > cd ~/MyRetail/src/
+    ```
+2. Run the following command
+
+    ```
+    > dotnet test
+    ```

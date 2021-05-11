@@ -26,7 +26,8 @@ jobs:
     - name: Build with dotnet
       run: |
         dotnet build src/MyRetail.csproj --configuration Release
-        dotnet build tests/MyRetail.UnitTest/MyRetail.UnitTest.csproj --configuration Release
+        dotnet build tests/MyRetail.UnitTest/MyRetail.UnitTest.csproj
+        dotnet build tests/MyRetail.UnitTest/MyRetail.AcceptanceTest.csproj
 
     - name: dotnet publish
       run: dotnet publish src/MyRetail.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
