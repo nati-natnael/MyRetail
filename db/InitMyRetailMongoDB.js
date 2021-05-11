@@ -53,7 +53,7 @@ const docArray = [
 collection.insertMany(docArray);
 print(`Successfully inserted to collection '${collectionName}'`);
 
-print("Verify document insertion to collection 'Products' ...");
+print(`Verify document insertion to collection '${collectionName}' ...`);
 for (const doc of docArray) {
     const dbDoc = collection.find({ "id": doc["id"] });
     if (dbDoc){
