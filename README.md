@@ -10,7 +10,7 @@ This API is hosted and can be accessed by the links below:
 |__Swagger UI__| https://<span></span>my-retail-service.azurewebsites.net/swagger |
 
 
-## MyRetail API Examples (From Hosted App)
+## Examples (From Hosted App)
 The following are examples of MyRetail app retrieving product information and updating pricing.
 
 ### Get Product Info by ID
@@ -63,6 +63,7 @@ Pre-requisites:
 * `MongoDB Server` must be installed and is running locally. Only required if app uses local mongoDB.
 * `MongoDB Shell` must be installed.
 
+Steps:
 1. Paste the lines below to file `~/MyRetail/db/InitMyRetailMongoDB.js`. If you have setup username and password, update credentials.
     ```
     const protocol = "mongodb";
@@ -94,6 +95,7 @@ Pre-requisites:
 * `.NET 5.0` must be installed
 * MongoDB  server must be running
 
+Steps:
 1. Clone MyRetail Repository
 
     ```
@@ -120,10 +122,8 @@ Pre-requisites:
     dotnet test tests/MyRetail.AcceptanceTest/MyRetail.AcceptanceTest.csproj
     ```
 
-
-
 ## Run Tests Locally
-MyRetail is cover by unit and acceptance tests.
+MyRetail app is covered by unit and acceptance tests.
 
 *NOTE - MyRetail acceptance tests use hosted version of the app.*
 
