@@ -9,81 +9,6 @@ This API is hosted and can be accessed by the links below:
 |__Update Product Price by ID__| https://my-retail-service.azurewebsites.net/product/{id}/price/{price} |
 |__Swagger UI__| https://my-retail-service.azurewebsites.net/swagger |
 
-## Run MyRetail RESTful Service Locally
-You can also run this system locally. Please follow the following steps for local API setup.
-
-### System Requirements
-* __Git__<br>
-    Required for pulling source code from Github.
-
-* __.NET 5.0__<br>
-    This is required for running the MyRetail service app locally. Follow the link below to download the appropriate library for your operating system.<br>
-    > Download and install: https://dotnet.microsoft.com/download
-    
-    If you have having issues installing .NET 5.0 on Linux, try the link below:
-    > Linux install: https://docs.microsoft.com/en-us/dotnet/core/install/linux-snap
-
-* __MongoDB__<br>
-    Pricing information of products is stored in the Mongo DB collection called `Products`. Please follow the instruction to install the Mongo DB server and run it locally.
-    > https://docs.mongodb.com/guides/server/install/
-
-* __MongoDB Shell__<br>
-    required for interacting with DB from the command line.
-    > Download MongDB Shell: https://www.mongodb.com/try/download/shell
-
-### Setup Local MyRetailDB
-Pre-requisites:
-* `MongoDB Server` must be installed and is running locally.
-* `MongoDB Shell` must be installed.
-
-There is a JS script in the `~/MyRetail/db` directory called `InitMyRetailMongoDB.js`. This script is designed to seed the database with product test data.<br>
-
----
-**CAUTION** - `InitMyRetailMongoDB.js` will drop MyRetailDB when run.
-
----
-
-The script contains connection names and credentials. These lines need to be updated to reflect the local database values. These values must match `DBConnectionStrings` in appsettings.json file used by MyRetail app to connect to MongoDB.
-```
-const dbName = "MyRetailDB"; 
-const dbAddress = "cluster0.88sdm.mongodb.net";
-const dbUsername = "MyRetail";
-const dbPassword = "myretail";
-const collectionName = "Products";
-```
-
-Run code below to execute the script:
-```
-> cd ~/MyRetail
-> mongosh --nodb db/InitMyRetailMongoDB.js
-```
-
-### Setup MyRetail API
-Pre-requisites:
-* `.NET 5.0` must be installed.
-* MyRetail repository must cloned.
-* Target MongoDB must be running
-
-1. Clone MyRetail Repository
-
-    ```
-    > git clone https://github.com/nati-natnael/MyRetail.git
-    ```
-2. Go to MyRetail Directory
-
-    ```
-    > cd MyRetail
-    ```
-3. Run MyRetail API
-
-    ```
-    > dotnet run src/MyRetail.csproj
-    ```
-4. Run MyRetail tests
-
-    ```
-    > dotnet run tests/MyRetail.UnitTest/MyRetail.UnitTest.csproj
-    ```
 
 ## MyRetail API Examples (From Hosted App)
 The following are examples of MyRetail app retrieving product information and updating pricing.
@@ -113,11 +38,90 @@ The above steps will send a `PUT` request to MyRetail API in the following form:
 PUT /product/13860428/price/10.00 HTTP/1.1
 ...
 ```
-## Run Tests Locally
-MyRetail is cover by unit and acceptance tests. 
 
+## Run MyRetail RESTful Service Locally
+You can also run this system locally. Please follow the following steps for local API setup.
+
+### System Requirements
+* __Git__<br>
+    Required for pulling source code from Github.
+
+* __.NET 5.0__<br>
+    This is required for running the MyRetail service app locally. Follow the link below to download the appropriate library for your operating system.<br>
+    > Download and install: https://dotnet.microsoft.com/download
+    
+    If you have having issues installing .NET 5.0 on Linux, try the link below:
+    > Linux install: https://docs.microsoft.com/en-us/dotnet/core/install/linux-snap
+
+* __MongoDB__<br>
+    Pricing information of products is stored in the Mongo DB collection called `Products`. Please follow the instruction to install the Mongo DB server and run it locally.
+    > https://docs.mongodb.com/manual/installation/
+
+* __MongoDB Shell__<br>
+    required for interacting with DB from the command line.
+    > Install MongDB Shell: https://docs.mongodb.com/mongodb-shell/install/#std-label-mdb-shell-install
+
+### Setup MyRetail API
 Pre-requisites:
-* MyRetail App and all its dependencies must be installed locally. Assuming MyRetail app settings contain default db connection strings, MongoDB server is not required locally to run tests.
+* `.NET 5.0` must be installed.
+* MyRetail repository must cloned.
+* Target MongoDB must be running
+
+1. Clone MyRetail Repository
+
+    ```
+    > git clone https://github.com/nati-natnael/MyRetail.git
+    ```
+2. Go to MyRetail Directory
+
+    ```
+    > cd MyRetail
+    ```
+3. Run MyRetail API
+
+    ```
+    > dotnet run --project src/MyRetail.csproj
+    ```
+4. Run MyRetail Unit tests
+
+    ```
+    > dotnet test tests/MyRetail.UnitTest/MyRetail.UnitTest.csproj
+    ```
+4. Run MyRetail Acceptance tests
+
+    ```
+    > dotnet test tests/MyRetail.AcceptanceTest/MyRetail.AcceptanceTest.csproj
+    ```
+
+### Setup Local MyRetailDB
+Pre-requisites:
+* `MongoDB Server` must be installed and is running locally. Only required if app uses local mongoDB.
+* `MongoDB Shell` must be installed.
+
+There is a JS script in the `~/MyRetail/db` directory called `InitMyRetailMongoDB.js`. This script is designed to seed the database with product test data.<br>
+
+---
+**CAUTION** - `InitMyRetailMongoDB.js` will drop MyRetailDB when run.
+
+---
+
+The script contains connection names and credentials. These lines need to be updated to reflect the local database values. These values must match `DBConnectionStrings` in appsettings.json file used by MyRetail app to connect to MongoDB.
+```
+const protocol = "mongodb+srv"; // use 'mongodb' for local db
+const dbAddress = "cluster0.88sdm.mongodb.net";
+const credentials = "MyRetail:myretail@"; // 'username:password'
+const dbName = "MyRetailDB";
+const collectionName = "Products";
+```
+
+Run code below to execute the script:
+```
+> cd ~/MyRetail
+> mongosh --nodb db/InitMyRetailMongoDB.js
+```
+
+## Run Tests Locally
+MyRetail is cover by unit and acceptance tests.
 
 ---
 **NOTE** - MyRetail acceptance tests use hosted version of the app.
