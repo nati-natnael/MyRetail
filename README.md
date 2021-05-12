@@ -9,7 +9,7 @@ This API is hosted and can be accessed by the links below:
 |__Update Product Price by ID__| https://my-retail-service.azurewebsites.net/product/{id}/price/{price} |
 |__Swagger UI__| https://my-retail-service.azurewebsites.net/swagger |
 
-## Setup and Run MyRetail RESTful Service Locally
+## Run MyRetail RESTful Service Locally
 You can also run this system locally. Please follow the following steps for local API setup.
 
 ### System Requirements
