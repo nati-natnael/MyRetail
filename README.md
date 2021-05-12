@@ -20,7 +20,7 @@ The following are examples of MyRetail app retrieving product information and up
 ### Update Product Price by ID
 Since this is a `PUT` request, it's best done from the swagger page or applications like `Postman`.
 
-*Note - MyRetail is hosted on cold start function. The first request will be slow to respond.*
+*NOTE - MyRetail is hosted on cold start function. The first request will be slow to respond.*
 
 Update Price From Swagger
 1. Navigate to the following link: https://my-retail-service.azurewebsites.net/swagger
@@ -58,82 +58,84 @@ You can also run this system locally. Please follow the following steps for loca
     required for interacting with DB from the command line.
     > Install MongDB Shell: https://docs.mongodb.com/mongodb-shell/install/#std-label-mdb-shell-install
 
-### Setup MyRetail API
-Pre-requisites:
-* `.NET 5.0` must be installed.
-* MyRetail repository must cloned.
-* Target MongoDB must be running
-
-1. Clone MyRetail Repository
-
-    ```
-    > git clone https://github.com/nati-natnael/MyRetail.git
-    ```
-2. Go to MyRetail Directory
-
-    ```
-    > cd MyRetail
-    ```
-3. Run MyRetail API
-
-    ```
-    > dotnet run --project src/MyRetail.csproj
-    ```
-4. Run MyRetail Unit tests
-
-    ```
-    > dotnet test tests/MyRetail.UnitTest/MyRetail.UnitTest.csproj
-    ```
-4. Run MyRetail Acceptance tests
-
-    ```
-    > dotnet test tests/MyRetail.AcceptanceTest/MyRetail.AcceptanceTest.csproj
-    ```
-
 ### Setup Local MyRetailDB
 Pre-requisites:
 * `MongoDB Server` must be installed and is running locally. Only required if app uses local mongoDB.
 * `MongoDB Shell` must be installed.
 
-There is a JS script in the `~/MyRetail/db` directory called `InitMyRetailMongoDB.js`. This script is designed to seed the database with product test data.<br>
+1. Paste the lines below to file `~/MyRetail/db/InitMyRetailMongoDB.js`. If you have setup username and password, update credentials.
+    ```
+    const protocol = "mongodb";
+    const dbAddress = "locahost:27017";
+    const credentials = "USERNAME:PASSWORD@";
+    ```
+2. Execute `~/MyRetail/db/InitMyRetailMongoDB.js` script to populate database with test data. Run the following command.
+    ```
+    cd ~/MyRetail
+    mongosh --nodb db/InitMyRetailMongoDB.js
+    ```
+3. Update `~MyRetail/src/appsettings.json` so the app can connect to the local database. The `DBConnectionStrings` must reflect new database connection, credentials, and db and collection name created by `~/MyRetail/db/InitMyRetailMongoDB.js`.
+    ```
+    "DBConnectionStrings": {
+        "Protocol": "mongodb",
+        "Address": "localhost:27017",
+        "Username": "USERNAME",
+        "Password": "PASSWORD",
+        "Name": "MyRetailDB",
+        "CollectionName": "Products"
+    },
+    ```
 
----
-**CAUTION** - `InitMyRetailMongoDB.js` will drop MyRetailDB when run.
+*CAUTION - `InitMyRetailMongoDB.js` will drop MyRetailDB when run.*
 
----
+### Setup MyRetail API
 
-The script contains connection names and credentials. These lines need to be updated to reflect the local database values. These values must match `DBConnectionStrings` in appsettings.json file used by MyRetail app to connect to MongoDB.
-```
-const protocol = "mongodb+srv"; // use 'mongodb' for local db
-const dbAddress = "cluster0.88sdm.mongodb.net";
-const credentials = "MyRetail:myretail@"; // 'username:password'
-const dbName = "MyRetailDB";
-const collectionName = "Products";
-```
+Pre-requisites:
+* `.NET 5.0` must be installed
+* MongoDB  server must be running
 
-Run code below to execute the script:
-```
-> cd ~/MyRetail
-> mongosh --nodb db/InitMyRetailMongoDB.js
-```
+1. Clone MyRetail Repository
+
+    ```
+    git clone https://github.com/nati-natnael/MyRetail.git
+    ```
+2. Go to MyRetail Directory
+
+    ```
+    cd MyRetail
+    ```
+3. Run MyRetail API
+
+    ```
+    dotnet run --project src/MyRetail.csproj
+    ```
+4. Run MyRetail Unit tests
+
+    ```
+    dotnet test tests/MyRetail.UnitTest/MyRetail.UnitTest.csproj
+    ```
+4. Run MyRetail Acceptance tests
+
+    ```
+    dotnet test tests/MyRetail.AcceptanceTest/MyRetail.AcceptanceTest.csproj
+    ```
+
+
 
 ## Run Tests Locally
 MyRetail is cover by unit and acceptance tests.
 
----
-**NOTE** - MyRetail acceptance tests use hosted version of the app.
-
----
+*NOTE - MyRetail acceptance tests use hosted version of the app.*
 
 Follow these steps to run all unit tests:
 
 1. Navigate to `~/MyRetail/src/`.
 
     ```
-    > cd ~/MyRetail/src/
+    cd ~/MyRetail/src/
     ```
 2. Run the following command
 
     ```
-    > dotnet test
+    dotnet test src/
     ```
