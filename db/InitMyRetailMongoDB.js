@@ -1,6 +1,6 @@
-const protocol = "mongodb+srv"; // use mongodb for local db
+const protocol = "mongodb+srv"; // use 'mongodb' for local db
 const dbAddress = "cluster0.88sdm.mongodb.net";
-const credentials = "MyRetail:myretail@"; // 'username:password
+const credentials = "MyRetail:myretail@"; // 'username:password'
 const dbName = "MyRetailDB";
 const collectionName = "Products";
 
