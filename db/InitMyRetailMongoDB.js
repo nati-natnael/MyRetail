@@ -1,11 +1,11 @@
+const protocol = "mongodb+srv"; // use mongodb for local db
 const dbAddress = "cluster0.88sdm.mongodb.net";
-const dbUsername = "MyRetail";
-const dbPassword = "myretail";
+const credentials = "MyRetail:myretail"; // 'username:password
 const dbName = "MyRetailDB";
 const collectionName = "Products";
 
 print(`Connecting to db '${dbName}' ... `);
-const db = connect(`mongodb+srv://${dbUsername}:${dbPassword}@${dbAddress}/${dbName}`);
+const db = connect(`${protocol}://${credentials}@${dbAddress}/${dbName}`);
 const collection = db.getCollection(collectionName);
 print(`Successfully connected to '${dbName}'`);
 
