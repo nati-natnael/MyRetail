@@ -19,6 +19,9 @@ You can also run this system locally. Please follow the following steps for loca
 * __.NET 5.0__<br>
     This is required for running the MyRetail service app locally. Follow the link below to download the appropriate library for your operating system.<br>
     > Download and install: https://dotnet.microsoft.com/download
+    
+    If you have having issues installing .NET 5.0 on Linux, try the link below:
+    > Linux install: https://docs.microsoft.com/en-us/dotnet/core/install/linux-snap
 
 * __MongoDB__<br>
     Pricing information of products is stored in the Mongo DB collection called `Products`. Please follow the instruction to install the Mongo DB server and run it locally.
