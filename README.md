@@ -5,9 +5,9 @@ MyRetail is a RESTful API for retrieving product information.
 This API is hosted and can be accessed by the links below:
 | | |
 |-|-|
-|__Get Product by ID__| https://my-retail-service.azurewebsites.net/product/{id} |
-|__Update Product Price by ID__| https://my-retail-service.azurewebsites.net/product/{id}/price/{price} |
-|__Swagger UI__| https://my-retail-service.azurewebsites.net/swagger |
+|__Get Product by ID__| https://<span></span>my-retail-service.azurewebsites.net/product/{id} |
+|__Update Product Price by ID__| https://<span></span>my-retail-service.azurewebsites.net/product/{id}/price/{price} |
+|__Swagger UI__| https://<span></span>my-retail-service.azurewebsites.net/swagger |
 
 
 ## MyRetail API Examples (From Hosted App)
@@ -20,17 +20,14 @@ The following are examples of MyRetail app retrieving product information and up
 ### Update Product Price by ID
 Since this is a `PUT` request, it's best done from the swagger page or applications like `Postman`.
 
----
-**NOTE** - MyRetail is hosted on cold start function. The first request will be slow to respond.
-
----
+*Note - MyRetail is hosted on cold start function. The first request will be slow to respond.*
 
 Update Price From Swagger
 1. Navigate to the following link: https://my-retail-service.azurewebsites.net/swagger
 2. From the Product dropdown click on `/product/{id}/price/{price}`
 3. Click `Try it out`
 4. Enter `13860428` in the `id` field
-5. Entry `10.00` in the `price` field
+5. Enter `10.00` in the `price` field
 6. Click the `Execute` button
 
 The above steps will send a `PUT` request to MyRetail API in the following form:
