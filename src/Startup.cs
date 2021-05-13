@@ -31,13 +31,13 @@ namespace MyRetail
 
             services.AddScoped<IProductRepository>(c =>
             {
+                string dbProtocol = Configuration.GetValue<string>("DBConnectionStrings:Protocol");
                 string dbAddress = Configuration.GetValue<string>("DBConnectionStrings:Address");
-                string dbUsername = Configuration.GetValue<string>("DBConnectionStrings:Username");
-                string dbPassword = Configuration.GetValue<string>("DBConnectionStrings:Password");
+                string dbCredentials = Configuration.GetValue<string>("DBConnectionStrings:Credentials");
                 string dbName = Configuration.GetValue<string>("DBConnectionStrings:Name");
                 string collectioName = Configuration.GetValue<string>("DBConnectionStrings:CollectionName");
 
-                string dbConnectionString = $"mongodb+srv://{dbUsername}:{dbPassword}@{dbAddress}";
+                string dbConnectionString = $"{dbProtocol}://{dbCredentials}{dbAddress}";
 
                 IMongoClient client = new MongoClient(dbConnectionString);
                 IMongoDatabase database = client.GetDatabase(dbName);

@@ -80,8 +80,7 @@ Steps:
     "DBConnectionStrings": {
         "Protocol": "mongodb",
         "Address": "localhost:27017",
-        "Username": "USERNAME",
-        "Password": "PASSWORD",
+        "Credentials": "USERNAME:PASSWORD@",
         "Name": "MyRetailDB",
         "CollectionName": "Products"
     },
